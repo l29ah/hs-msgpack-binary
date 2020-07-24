@@ -111,9 +111,8 @@ putDouble d = do
   putWord8 0xCB
   putFloat64be d
 
-putStr :: T.Text -> Put
-putStr t = do
-  let bs = T.encodeUtf8 t
+putStr :: S.ByteString -> Put
+putStr bs = do
   case S.length bs of
     len | len <= 31 ->
           putWord8 $ 0xA0 .|. fromIntegral len

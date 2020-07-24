@@ -95,7 +95,7 @@ getFloat = tag 0xCA >> getFloat32be
 getDouble :: Get Double
 getDouble = tag 0xCB >> getFloat64be
 
-getStr :: Get T.Text
+getStr :: Get S.ByteString
 getStr = do
   len <- getWord8 >>= \case
     t | t .&. 0xE0 == 0xA0 ->
@@ -104,10 +104,7 @@ getStr = do
     0xDA -> fromIntegral <$> getWord16be
     0xDB -> fromIntegral <$> getWord32be
     _    -> empty
-  bs <- getByteString len
-  case T.decodeUtf8' bs of
-    Left  _ -> empty
-    Right v -> return v
+  getByteString len
 
 getBin :: Get S.ByteString
 getBin = do
